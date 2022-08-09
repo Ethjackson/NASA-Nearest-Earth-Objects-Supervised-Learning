@@ -1,3 +1,4 @@
+from tkinter.messagebox import NO
 from turtle import TPen
 from matplotlib.pyplot import clf
 import numpy as np
@@ -5,11 +6,12 @@ import pandas as pd
 
 dataset = pd.read_csv('neo.csv', sep=',')
 
-# count used to check if orbiting_body is all same string of 'Earth'
+# count used to check if orbiting_body is all same string of 'Earth' and sentry_object is string 'False'
 count = (dataset.iloc[:,-4])
+count2 = (dataset.iloc[:,-3])
 
 # normalising and removing names of asteroids and repeating uneeded values for ML
-dataset = dataset.drop(['name', 'orbiting_body'], axis=1)
+dataset = dataset.drop(['name', 'orbiting_body', 'sentry_object'], axis=1)
 
 # check dataset has been loaded and columns dropped correctly
 # print(dataset)
@@ -26,7 +28,8 @@ y = dataset[dataset.columns[-1]]
 # print(y)
 
 # using train_test_split import to split the dataset with a randomness of 30
-Xtrain, Xtest, ytrain, ytest = train_test_split(X, y, random_state=30)
+Xtrain, Xtest, ytrain, ytest = train_test_split(X, y, random_state=None)
+print(Xtest)
 
 # create default MLPClassifier
 clasi = MLPClassifier()
@@ -56,3 +59,16 @@ accuracy = (TP + TN) / (TP + TN + FP + FN)
 
 # printing the accuracy 
 print("Accuracy of MLPClassifier : ", accuracy)
+
+# enter the following statistics of a meteor for MLP to predict if it is hazardous or not:
+elements = {
+        'id':  [2277475],
+        'est_diameter_min': [0.2658],
+        'est_diameter_max': [0.5943468684],
+        'relative_velocity': [73588.7266634981],
+        'miss_distance': [61438126.52395093],
+        'absolute_magnitude': [20.0],
+        }
+
+elements = pd.DataFrame(elements)
+print("True/False the entered asteroid is hazardous... ", clasi.predict(elements))
